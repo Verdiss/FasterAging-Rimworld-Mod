@@ -1,6 +1,6 @@
 ﻿/*
  * Faster Aging Mod by Verdiss
- * Mod Version 1.1 2019-09-05 tested for Rimworld 1.0
+ * Mod Version 1.1a 2019-09-15 tested for Rimworld 1.0
  * You are free to redistribute this mod and use its code for non-commercial purposes, just give credit to Verdiss in descriptions and in source code.
  * You are also free to laugh at how badly the mod is implemented, and wash out your eyes with bleach after closing your IDE in horror.
  */
@@ -10,12 +10,13 @@ using Verse;
 using Harmony;
 using HugsLib;
 using HugsLib.Settings;
+using System.Reflection;
 
 namespace FasterAging
 {
-    /*
-     * This class loads and prepares HugsLib mod config settings, as well as being loaded into HugsLib system for Harmony patching.
-     */
+    /// <summary>
+    /// Loads and prepares HugsLib mod config settings, as well as being loaded into HugsLib system for Harmony patching.
+    /// </summary>
     public class FasterAging : ModBase
     {
         public override string ModIdentifier => "FasterAging";
@@ -36,9 +37,10 @@ namespace FasterAging
         public static int animalSpeedMultAfterCutoff = 1; //Actual value of the animal speed multiplier after cutoff setting
         public static int animalCutoffAge = 1000; //Actual value of the animal cutoff age setting
 
-        /*
-         * Runs during game startup and initializes settings and setting values.
-         */
+        /// <summary>
+        /// Runs during game startup.
+        /// Initializes settings and setting values.
+        /// </summary>
         public override void DefsLoaded()
         {
             //Setup and get settings values
@@ -62,9 +64,10 @@ namespace FasterAging
             animalCutoffAge = animalCutoffAgeSetting.Value;
         }
 
-        /*
-         * Runs whenever the user changes a setting in the mod config, adjusts variables to match new values during runtime.
-         */
+        /// <summary>
+        /// Runs whenever the user changes a setting during runtime.
+        /// Adjusts the internal variables to match the new settings.
+        /// </summary>
         public override void SettingsChanged()
         {
             if (pawnSpeedMultBeforeCutoffSetting.Value < 0)
@@ -111,15 +114,17 @@ namespace FasterAging
         }
     }
 
-    /*
-     * This class patches the Tick method to adjust with the settings.
-     */
+    /// <summary>
+    /// Patches Pawn.Tick().
+    /// </summary>
     [HarmonyPatch(typeof(Verse.Pawn), "Tick")]
     public static class FasterAgingPatch
     {
-        /*
-         * Runs on every pawn every tick. The pawn (__instance) has its AgeTick method called as required.
-         */
+        /// <summary>
+        /// Runs on every pawn every tick.
+        /// The pawn (__instance) has its AgeTick method called as required.
+        /// </summary>
+        /// <param name="__instance"></param>
         [HarmonyPostfix]
         public static void multiTick(Pawn __instance)
         {
@@ -166,6 +171,33 @@ namespace FasterAging
                     __instance.ageTracker.AgeTick();
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Patches Pawn_AgeTracker.AgeTick()
+    /// This fixes a problem caused by how vanilla RimWorld calculates life stages.
+    /// </summary>
+    [HarmonyPatch(typeof(Verse.Pawn_AgeTracker), "AgeTick")]
+    public static class FasterAgingLifestagePatch
+    {
+        /// <summary>
+        /// Runs after AgeTick(), as often as it is called.
+        /// Performs a daily recalculation of life stage.
+        /// </summary>
+        /// <param name="__instance"></param>
+        [HarmonyPostfix]
+        public static void dailyRecalc(Pawn_AgeTracker __instance)
+        {
+            //if (Find.TickManager.TicksGame % 60000 == 0)
+            //{
+                Log.Message("I have performed a daily check");
+                //Traverse.Create(__instance).Method("RecalculateLifeStageIndex").;
+                //__instance.RecalculateLifeStageIndex();
+
+                MethodInfo info = AccessTools.Method(__instance.GetType(), "RecalculateLifeStageIndex", null, null);
+                info.Invoke(__instance, null);
+            //}
         }
     }
 }

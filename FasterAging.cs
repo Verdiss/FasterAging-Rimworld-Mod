@@ -189,15 +189,12 @@ namespace FasterAging
         [HarmonyPostfix]
         public static void dailyRecalc(Pawn_AgeTracker __instance)
         {
-            //if (Find.TickManager.TicksGame % 60000 == 0)
-            //{
-                Log.Message("I have performed a daily check");
-                //Traverse.Create(__instance).Method("RecalculateLifeStageIndex").;
-                //__instance.RecalculateLifeStageIndex();
-
+            if (Find.TickManager.TicksGame % 60000 == 0)
+            {
+                //Log.Message("I have performed a daily check");
                 MethodInfo info = AccessTools.Method(__instance.GetType(), "RecalculateLifeStageIndex", null, null);
                 info.Invoke(__instance, null);
-            //}
+            }
         }
     }
 }

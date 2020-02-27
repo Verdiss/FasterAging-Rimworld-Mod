@@ -1,13 +1,13 @@
 ﻿/*
  * Faster Aging Mod by Verdiss
- * Mod Version 1.1a 2019-09-15 tested for Rimworld 1.0
+ * Mod Version 1.2 2020-02-26 tested for Rimworld 1.1
  * You are free to redistribute this mod and use its code for non-commercial purposes, just give credit to Verdiss in descriptions and in source code.
  * You are also free to laugh at how badly the mod is implemented, and wash out your eyes with bleach after closing your IDE in horror.
  */
 
 using System;
 using Verse;
-using Harmony;
+using HarmonyLib;
 using HugsLib;
 using HugsLib.Settings;
 using System.Reflection;

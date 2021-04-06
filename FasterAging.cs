@@ -9,44 +9,69 @@ using Verse;
 using HarmonyLib;
 using HugsLib;
 using HugsLib.Settings;
-using System.Reflection;
-using System;
 
 namespace FasterAging
 {
     /// <summary>
     /// Loads and prepares HugsLib mod config settings, as well as being loaded into HugsLib system for Harmony patching.
     /// </summary>
+    [EarlyInit]
     public class FasterAging : ModBase
     {
         public override string ModIdentifier => "FasterAging";
 
-        private SettingHandle<int> pawnSpeedMultBeforeCutoffSetting; //HugsLib setting controlling the speed multiplier for humanoid pawns below the cutoff age
-        private SettingHandle<int> pawnSpeedMultAfterCutoffSetting; //HugsLib setting controlling the speed multiplier for humanoid pawns equal to or above the cutoff age
-        private SettingHandle<int> pawnCutoffAgeSetting; //HugsLib setting controlling the cutoff age for age speed for humanoid pawns.
+        //Disabling autopatching to allow conditional compatibility patches.
+        protected override bool HarmonyAutoPatch => false;
 
-        private SettingHandle<int> animalSpeedMultBeforeCutoffSetting; //HugsLib setting controlling the speed multiplier for animals below the cutoff age
-        private SettingHandle<int> animalSpeedMultAfterCutoffSetting; //HugsLib setting controlling the speed multiplier for animals equal to or above the cutoff age
-        private SettingHandle<int> animalCutoffAgeSetting; //HugsLib setting controlling the cutoff age for age speed for animals.
+        //The Harmony ID. This can really be whatever, I just chose the least creative name possible here.
+        Harmony harmony = new Harmony(id: "rimworld.Faster.Aging.main");
+
+        private SettingHandle<long> pawnSpeedMultBeforeCutoffSetting; //HugsLib setting controlling the speed multiplier for humanoid pawns below the cutoff age
+        private SettingHandle<long> pawnSpeedMultAfterCutoffSetting; //HugsLib setting controlling the speed multiplier for humanoid pawns equal to or above the cutoff age
+        private SettingHandle<long> pawnCutoffAgeSetting; //HugsLib setting controlling the cutoff age for age speed for humanoid pawns.
+
+        private SettingHandle<long> animalSpeedMultBeforeCutoffSetting; //HugsLib setting controlling the speed multiplier for animals below the cutoff age
+        private SettingHandle<long> animalSpeedMultAfterCutoffSetting; //HugsLib setting controlling the speed multiplier for animals equal to or above the cutoff age
+        private SettingHandle<long> animalCutoffAgeSetting; //HugsLib setting controlling the cutoff age for age speed for animals.
 
         private SettingHandle<bool> modifyChronologicalAgeSetting; //HugsLib setting controlling whether chronological age is also modified.
 
-        private SettingHandle<bool> useAlternateAgingAlgorithmSetting; //HugsLib setting controls whether the mod uses the alternate aging algorithm.
 
+        public static long pawnSpeedMultBeforeCutoff = 1; //Actual value of the pawn speed multiplier before cutoff setting
+        public static long pawnSpeedMultAfterCutoff = 1; //Actual value of the pawn speed multiplier after cutoff setting
+        public static long pawnCutoffAge = 1000; //Actual value of the pawn cutoff age setting
+        public static long PawnCutoffAgeTicks => (pawnCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
-        public static int pawnSpeedMultBeforeCutoff = 1; //Actual value of the pawn speed multiplier before cutoff setting
-        public static int pawnSpeedMultAfterCutoff = 1; //Actual value of the pawn speed multiplier after cutoff setting
-        public static int pawnCutoffAge = 1000; //Actual value of the pawn cutoff age setting
-        public static long pawnCutoffAgeTicks => (pawnCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
-
-        public static int animalSpeedMultBeforeCutoff = 1; //Actual value of the animal speed multiplier before cutoff setting
-        public static int animalSpeedMultAfterCutoff = 1; //Actual value of the animal speed multiplier after cutoff setting
-        public static int animalCutoffAge = 1000; //Actual value of the animal cutoff age setting
-        public static long animalCutoffAgeTicks => (animalCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
+        public static long animalSpeedMultBeforeCutoff = 1; //Actual value of the animal speed multiplier before cutoff setting
+        public static long animalSpeedMultAfterCutoff = 1; //Actual value of the animal speed multiplier after cutoff setting
+        public static long animalCutoffAge = 1000; //Actual value of the animal cutoff age setting
+        public static long AnimalCutoffAgeTicks => (animalCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static bool modifyChronologicalAge = false; //Whether to also change chronological age, not just biological
 
-        public static bool useAlternateAging = false; //Whether to use the alternate aging algorithm.
+        public override void EarlyInitialize()
+        {
+            //Debug Logging. Enabling this puts a harmony.log.txt file with transpiler outputs on the desktop.
+            //Harmony.DEBUG = true;
+
+            //Harmony patches
+            harmony.Patch(AccessTools.Method(typeof(Verse.Pawn_AgeTracker), nameof(Verse.Pawn_AgeTracker.AgeTick)), prefix: null, postfix: null,
+                transpiler: new HarmonyMethod(typeof(AgeTick), nameof(AgeTick.FasterAgingTranspiler)));
+            harmony.Patch(AccessTools.Method(typeof(Verse.Pawn_AgeTracker), nameof(Verse.Pawn_AgeTracker.AgeTickMothballed)), prefix: null, postfix: null,
+                transpiler: new HarmonyMethod(typeof(WorldPawnAgeTick), nameof(WorldPawnAgeTick.FasterAgingWorldPawnTranspiler)));
+            harmony.Patch(AccessTools.Method(typeof(Verse.Pawn_AgeTracker), nameof(Verse.Pawn_AgeTracker.RecalculateLifeStageIndex)), prefix: null, postfix: null,
+                transpiler: new HarmonyMethod(typeof(RecalculateLifeStageIndex), nameof(RecalculateLifeStageIndex.FasterAgingLifeStageTranspiler)));
+        }
+
+        public override void WorldLoaded()
+        {
+            //Fix for Rocketman compatibility. This needs to be loaded late, and WorldLoaded() happens to be late.
+            if (ModLister.HasActiveModWithName("[NTS] [EXPERIMENTAL] RocketMan"))
+            {
+                harmony.Patch(AccessTools.Method(typeof(Verse.Pawn_AgeTracker), nameof(Verse.Pawn_AgeTracker.AgeTick)), prefix: null, postfix: null,
+                    transpiler: new HarmonyMethod(typeof(CompatPatches), nameof(CompatPatches.RocketmanCompatibilityTranspiler)));
+            }
+        }
 
         /// <summary>
         /// Runs during game startup.
@@ -55,32 +80,28 @@ namespace FasterAging
         public override void DefsLoaded()
         {
             //Setup and get settings values
-            pawnSpeedMultBeforeCutoffSetting = Settings.GetHandle<int>(settingName: "speedMultSetting", title: "settings_pawnSpeedMultBefore_title".Translate(), description: "settings_pawnSpeedMultBefore_description".Translate(), defaultValue: 1); //Using old setting title speedMultSetting for compatability
+            pawnSpeedMultBeforeCutoffSetting = Settings.GetHandle<long>(settingName: "speedMultSetting", title: "settings_pawnSpeedMultBefore_title".Translate(), description: "settings_pawnSpeedMultBefore_description".Translate(), defaultValue: 1); //Using old setting title speedMultSetting for compatibility
             pawnSpeedMultBeforeCutoff = pawnSpeedMultBeforeCutoffSetting.Value;
 
-            pawnSpeedMultAfterCutoffSetting = Settings.GetHandle<int>(settingName: "pawnSpeedMultAfter", title: "settings_pawnSpeedMultAfter_title".Translate(), description: "settings_pawnSpeedMultAfter_description".Translate(), defaultValue: 1);
+            pawnSpeedMultAfterCutoffSetting = Settings.GetHandle<long>(settingName: "pawnSpeedMultAfter", title: "settings_pawnSpeedMultAfter_title".Translate(), description: "settings_pawnSpeedMultAfter_description".Translate(), defaultValue: 1);
             pawnSpeedMultAfterCutoff = pawnSpeedMultAfterCutoffSetting.Value;
 
-            pawnCutoffAgeSetting = Settings.GetHandle<int>(settingName: "pawnCutoffAge", title: "settings_pawnCutoffAge_title".Translate(), description: "settings_pawnCutoffAge_description".Translate(), defaultValue: 1000);
+            pawnCutoffAgeSetting = Settings.GetHandle<long>(settingName: "pawnCutoffAge", title: "settings_pawnCutoffAge_title".Translate(), description: "settings_pawnCutoffAge_description".Translate(), defaultValue: 1000);
             pawnCutoffAge = pawnCutoffAgeSetting.Value;
 
 
-            animalSpeedMultBeforeCutoffSetting = Settings.GetHandle<int>(settingName: "animalSpeedMultBefore", title: "settings_animalSpeedMultBefore_title".Translate(), description: "settings_animalSpeedMultBefore_description".Translate(), defaultValue: 1);
+            animalSpeedMultBeforeCutoffSetting = Settings.GetHandle<long>(settingName: "animalSpeedMultBefore", title: "settings_animalSpeedMultBefore_title".Translate(), description: "settings_animalSpeedMultBefore_description".Translate(), defaultValue: 1);
             animalSpeedMultBeforeCutoff = animalSpeedMultBeforeCutoffSetting.Value;
 
-            animalSpeedMultAfterCutoffSetting = Settings.GetHandle<int>(settingName: "animalSpeedMultAfter", title: "settings_animalSpeedMultAfter_title".Translate(), description: "settings_animalSpeedMultAfter_description".Translate(), defaultValue: 1);
+            animalSpeedMultAfterCutoffSetting = Settings.GetHandle<long>(settingName: "animalSpeedMultAfter", title: "settings_animalSpeedMultAfter_title".Translate(), description: "settings_animalSpeedMultAfter_description".Translate(), defaultValue: 1);
             animalSpeedMultAfterCutoff = animalSpeedMultAfterCutoffSetting.Value;
 
-            animalCutoffAgeSetting = Settings.GetHandle<int>(settingName: "animalCutoffAge", title: "settings_animalCutoffAge_title".Translate(), description: "settings_animalCutoffAge_description".Translate(), defaultValue: 1000);
+            animalCutoffAgeSetting = Settings.GetHandle<long>(settingName: "animalCutoffAge", title: "settings_animalCutoffAge_title".Translate(), description: "settings_animalCutoffAge_description".Translate(), defaultValue: 1000);
             animalCutoffAge = animalCutoffAgeSetting.Value;
 
 
             modifyChronologicalAgeSetting = Settings.GetHandle<bool>(settingName: "modifyChronologicalAge", title: "settings_modifyChronologicalAge_title".Translate(), description: "settings_modifyChronologicalAge_description".Translate(), defaultValue: false);
             modifyChronologicalAge = modifyChronologicalAgeSetting.Value;
-
-
-            useAlternateAgingAlgorithmSetting = Settings.GetHandle<bool>(settingName: "useAlternateAgingAlgorithm", title: "settings_useAlternateAgingAlgorithm_title".Translate(), description: "settings_modifyChronologicalAge_description".Translate(), defaultValue: false);
-            useAlternateAging = useAlternateAgingAlgorithmSetting.Value;
         }
 
         /// <summary>
@@ -89,54 +110,51 @@ namespace FasterAging
         /// </summary>
         public override void SettingsChanged()
         {
-            if (pawnSpeedMultBeforeCutoffSetting.Value < 0)
+            /*if (pawnSpeedMultBeforeCutoffSetting.Value < 0)
             {
-                pawnSpeedMultBeforeCutoffSetting.Value = 0; //All settings have checks to prevent negative values. Reverse aging ain't happening.
-            }
+                pawnSpeedMultBeforeCutoffSetting.Value = 0; //All settings have checks to prevent negative values. Reverse aging ain't happening. ---> Reverse aging works now, actually. Mostly. The game won't die.
+            }*/
             pawnSpeedMultBeforeCutoff = pawnSpeedMultBeforeCutoffSetting.Value;
 
 
-            if (pawnSpeedMultAfterCutoffSetting.Value < 0)
+            /*if (pawnSpeedMultAfterCutoffSetting.Value < 0)
             {
                 pawnSpeedMultAfterCutoffSetting.Value = 0;
-            }
+            }*/
             pawnSpeedMultAfterCutoff = pawnSpeedMultAfterCutoffSetting.Value;
 
 
-            if (pawnCutoffAgeSetting.Value < 0)
+            /*if (pawnCutoffAgeSetting.Value < 0)
             {
                 pawnCutoffAgeSetting.Value = 0;
-            }
+            }*/
             pawnCutoffAge = pawnCutoffAgeSetting.Value;
 
 
 
-            if (animalSpeedMultBeforeCutoffSetting.Value < 0)
+            /*if (animalSpeedMultBeforeCutoffSetting.Value < 0)
             {
                 animalSpeedMultBeforeCutoffSetting.Value = 0;
-            }
+            }*/
             animalSpeedMultBeforeCutoff = animalSpeedMultBeforeCutoffSetting.Value;
 
 
-            if (animalSpeedMultAfterCutoffSetting.Value < 0)
+            /*if (animalSpeedMultAfterCutoffSetting.Value < 0)
             {
                 animalSpeedMultAfterCutoffSetting.Value = 0;
-            }
+            }*/
             animalSpeedMultAfterCutoff = animalSpeedMultAfterCutoffSetting.Value;
 
 
-            if (animalCutoffAgeSetting.Value < 0)
+            /*if (animalCutoffAgeSetting.Value < 0)
             {
                 animalCutoffAgeSetting.Value = 0;
-            }
+            }*/
             animalCutoffAge = animalCutoffAgeSetting.Value;
 
 
 
             modifyChronologicalAge = modifyChronologicalAgeSetting.Value;
-
-
-            useAlternateAging = useAlternateAgingAlgorithmSetting.Value;
         }
 
         /// <summary>
@@ -144,183 +162,60 @@ namespace FasterAging
         /// </summary>
         /// <param name="pawn">Pawn to determine the age rate multiplier for</param>
         /// <returns></returns>
-        public static int GetPawnAgingMultiplier(Pawn pawn)
+        public static long GetPawnAgingMultiplier(Pawn_AgeTracker _instance)
         {
-            int multiplier = 0; //How much the settings say the pawn's age speed should be multiplied by.
+            Pawn pawn = _instance.pawn;
 
-
-            if (!pawn.RaceProps.Humanlike)
-            {
-                //It's an animal
-                if (pawn.ageTracker.AgeBiologicalTicks >= animalCutoffAgeTicks)
-                {
-                    //It's after the cutoff age
-                    multiplier = animalSpeedMultAfterCutoff;
-                }
-                else
-                {
-                    //It's before the cutoff age
-                    multiplier = animalSpeedMultBeforeCutoff;
-                }
-            }
-            else
+            if (pawn.RaceProps.Humanlike)
             {
                 //It's a humanlike
-                if (pawn.ageTracker.AgeBiologicalTicks >= pawnCutoffAgeTicks)
+                if (pawn.ageTracker.AgeBiologicalTicks >= PawnCutoffAgeTicks)
                 {
                     //It's after the cutoff age
-                    multiplier = pawnSpeedMultAfterCutoff;
+                    return pawnSpeedMultAfterCutoff;
                 }
                 else
                 {
                     //It's before the cutoff age
-                    multiplier = pawnSpeedMultBeforeCutoff;
+                    return pawnSpeedMultBeforeCutoff;
                 }
-            }
-
-
-            return multiplier;
-        }
-    }
-
-    /// <summary>
-    /// Patches Pawn.Tick().
-    /// </summary>
-    [HarmonyPatch(typeof(Verse.Pawn), "Tick")]
-    public static class FasterAgingPatch
-    {
-        /// <summary>
-        /// Runs on every pawn every tick.
-        /// The pawn (__instance) has its AgeTick method called as required.
-        /// </summary>
-        /// <param name="__instance">Pawn that is having its Tick method called</param>
-        [HarmonyPostfix]
-        public static void MultiTick(Pawn __instance)
-        {
-            //Determine multiplier
-            int multiplier = FasterAging.GetPawnAgingMultiplier(__instance);
-
-
-            //Run extra aging.
-            if (multiplier == 0) //Aging is disabled - Manually revert the age increase from the core game's AgeTick call
-            {
-                __instance.ageTracker.AgeBiologicalTicks += -1;
-                //Note - there is still a potential issue if the age multiplier setting is changed by the player to 0 on a birthday tick, causing that birthday to get re-run.
-                //This is a hilariously impossible edge case, but if I want to improve code safety, this is something to work on.
             }
             else
             {
-                if (!FasterAging.useAlternateAging)
+                //It's an animal
+                if (pawn.ageTracker.AgeBiologicalTicks >= AnimalCutoffAgeTicks)
                 {
-                    //Primary aging algorithm - repeat calls AgeTick until a correct number of calls has been made to match the multiplier.
-                    //This system is more performance intensive, and will trip up any mods that expect AgeTick to be called once per pawn tick.
-                    //However, I judge that it is more likely and more problematic that a mod expects a specific age tick count to occur after
-                    //an AgeTick call, which will get skipped using the alternative method.
-                    //Thus this is the default algorithm.
-                    for (int additionalTick = 0; additionalTick < multiplier - 1; additionalTick++) //AgeTick already runs once naturally - subtract 1 from the multiplier to get how many times it should be called again
-                    {
-                        __instance.ageTracker.AgeTick();
-                    }
-                } else
+                    //It's after the cutoff age
+                    return animalSpeedMultAfterCutoff;
+                }
+                else
                 {
-                    //Alternative aging algorithm - directly increment the pawn's age tick value to the appropriate amount. Similar to vanilla AgeTickMothballed
-                    //This is much less performance hungry, but may cause issues if another mod expects AgeTick to only increment the age value by 1, or if 
-                    //another mod has a trigger set up to check for a specific age tick value after AgeTick is called.
-                    //It's an optional alternate method for these reasons.
-                    int ageYearsBefore = __instance.ageTracker.AgeBiologicalYears; //Save the pawn's age before the increment for birthday calculation
-
-                    __instance.ageTracker.AgeBiologicalTicks += multiplier - 1; //Advances the pawn's age value. It has already been increased by 1 by vanilla code.
-
-                    //Vanilla's AgeTickMothballed includes a check for life stage recalculation here.
-                    //I don't think this is necessary/it has already been solved by my daily check.
-                    //It also includes a Find call that I worry might not work well with a mod, so I didn't include the code.
-
-                    //Birthday check - run BiologicalBirthday once for every full year of age that the pawn has advanced during this algorithm
-                    //Tynan used a much more complicated system of comparing age tick values, but I cannot say why. If this is an issue, though, I should replace this with his system.
-                    for (int year = ageYearsBefore; year < __instance.ageTracker.AgeBiologicalYears; year++)
-                    {
-                        __instance.ageTracker.DebugForceBirthdayBiological(); //This method is public where BirthdayBiological is private. The debug method does nothing but call the proper method fortunately.
-                    }
+                    //It's before the cutoff age
+                    return animalSpeedMultBeforeCutoff;
                 }
             }
+        }
 
-
+        //For the pawn tick
+        public static void ModifyChronologicalAge(Pawn_AgeTracker _instance, long multiplier)
+        {
             //Experimental Chronological age modification
             //I judge this too likely to cause issues and too practically insignificant to include as a default feature.
-            if (FasterAging.modifyChronologicalAge)
+            if (modifyChronologicalAge)
             {
-                __instance.ageTracker.BirthAbsTicks -= multiplier - 1; //Move the character's birthday earlier in time, accelerating how distant it is from the current. If multiplier is 0, actually moves birthday forward 1 tick, keeping it a constant distance from the current tick and thus a constant age.
+                _instance.BirthAbsTicks -= multiplier - 1L; //Move the character's birthday earlier in time, accelerating how distant it is from the current. If multiplier is 0, actually moves birthday forward 1 tick, keeping it a constant distance from the current tick and thus a constant age.
             }
         }
-    }
 
-
-    /// <summary>
-    /// Patches Pawn_AgeTracker.AgeTickMothballed()
-    /// </summary>
-    [HarmonyPatch(typeof(Verse.Pawn_AgeTracker), "AgeTickMothballed")]
-    public static class FasterAgingMothballedPatch
-    {
-        /// <summary>
-        /// This patch modifies the core game's AgeTickMothballed's interval argument, which determines how many ageticks to add every call.
-        /// It multiplies this argument to increase or halt the aging rate of mothballed pawns.
-        /// </summary>
-        /// <param name="interval">Vanilla value that determines how many age ticks to advance the pawn through</param>
-        /// <param name="__instance">Pawn that is having its AgeTickMothballed method called</param>
-        [HarmonyPrefix]
-        public static void MultipliedAgeTick(ref int interval, Pawn_AgeTracker __instance)
+        //For the mothball (worldpawn) tick
+        public static void ModifyChronologicalAge(Pawn_AgeTracker _instance, long multiplier, int interval)
         {
-            //Find the pawn this tracker belongs to
-            Pawn pawn = null;
-            FieldInfo pawnFieldInfo = AccessTools.Field(__instance.GetType(), "pawn");
-            if (pawnFieldInfo != null && pawnFieldInfo.FieldType.Equals(typeof(Verse.Pawn)))
+            //Experimental Chronological age modification
+            //I judge this too likely to cause issues and too practically insignificant to include as a default feature.
+            if (modifyChronologicalAge)
             {
-                pawn = (Verse.Pawn)pawnFieldInfo.GetValue(__instance);
-            }
-
-            if (pawn != null)
-            {
-                //Determine multiplier
-                int multiplier = FasterAging.GetPawnAgingMultiplier(pawn);
-
-
-                //Experimental Chronological age modification
-                //I judge this too likely to cause issues and too practically insignificant to include as a default feature.
-                if (FasterAging.modifyChronologicalAge)
-                {
-                    __instance.BirthAbsTicks -= (multiplier - 1) * interval; //Similar system to how the AgeTick patch works, just on the scale of the base interval rather than single ticks. Moves the pawn's birthday to correctly account for modified age rate.
-                }
-
-
-                //Edit the referenced interval value to take the multiplier into account.
-                //The game will now run AgeTickMothballed() with this edited interval, accelerating or halting aging.
-                interval = multiplier * interval;
+                _instance.BirthAbsTicks -= (multiplier - 1L) * interval; //Move the character's birthday earlier in time, accelerating how distant it is from the current. If multiplier is 0, actually moves birthday forward 1 tick, keeping it a constant distance from the current tick and thus a constant age.
             }
         }
-    }
-
-
-    /// <summary>
-    /// Patches Pawn_AgeTracker.AgeTick()
-    /// This fixes a problem caused by how vanilla RimWorld calculates life stages.
-    /// </summary>
-    [HarmonyPatch(typeof(Verse.Pawn_AgeTracker), "AgeTick")]
-    public static class FasterAgingLifestagePatch
-    {
-        /// <summary>
-        /// Runs after AgeTick(), as often as it is called.
-        /// Performs a daily recalculation of life stage.
-        /// </summary>
-        /// <param name="__instance">Pawn that is having its AgeTick method called</param>
-        [HarmonyPostfix]
-        public static void DailyRecalc(Pawn_AgeTracker __instance)
-        {
-            if (Find.TickManager.TicksGame % 60000 == 0)
-            {
-                //Log.Message("I have performed a daily check");
-                MethodInfo info = AccessTools.Method(__instance.GetType(), "RecalculateLifeStageIndex", null, null);
-                info.Invoke(__instance, null);
-            }
-        }
-    }
+    }  
 }

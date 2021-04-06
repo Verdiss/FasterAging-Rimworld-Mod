@@ -110,46 +110,46 @@ namespace FasterAging
         /// </summary>
         public override void SettingsChanged()
         {
-            if (pawnSpeedMultBeforeCutoffSetting.Value < 0)
+            /*if (pawnSpeedMultBeforeCutoffSetting.Value < 0)
             {
-                pawnSpeedMultBeforeCutoffSetting.Value = 0; //All settings have checks to prevent negative values. Reverse aging ain't happening.
-            }
+                pawnSpeedMultBeforeCutoffSetting.Value = 0; //All settings have checks to prevent negative values. Reverse aging ain't happening. ---> Reverse aging works now, actually. Mostly. The game won't die.
+            }*/
             pawnSpeedMultBeforeCutoff = pawnSpeedMultBeforeCutoffSetting.Value;
 
 
-            if (pawnSpeedMultAfterCutoffSetting.Value < 0)
+            /*if (pawnSpeedMultAfterCutoffSetting.Value < 0)
             {
                 pawnSpeedMultAfterCutoffSetting.Value = 0;
-            }
+            }*/
             pawnSpeedMultAfterCutoff = pawnSpeedMultAfterCutoffSetting.Value;
 
 
-            if (pawnCutoffAgeSetting.Value < 0)
+            /*if (pawnCutoffAgeSetting.Value < 0)
             {
                 pawnCutoffAgeSetting.Value = 0;
-            }
+            }*/
             pawnCutoffAge = pawnCutoffAgeSetting.Value;
 
 
 
-            if (animalSpeedMultBeforeCutoffSetting.Value < 0)
+            /*if (animalSpeedMultBeforeCutoffSetting.Value < 0)
             {
                 animalSpeedMultBeforeCutoffSetting.Value = 0;
-            }
+            }*/
             animalSpeedMultBeforeCutoff = animalSpeedMultBeforeCutoffSetting.Value;
 
 
-            if (animalSpeedMultAfterCutoffSetting.Value < 0)
+            /*if (animalSpeedMultAfterCutoffSetting.Value < 0)
             {
                 animalSpeedMultAfterCutoffSetting.Value = 0;
-            }
+            }*/
             animalSpeedMultAfterCutoff = animalSpeedMultAfterCutoffSetting.Value;
 
 
-            if (animalCutoffAgeSetting.Value < 0)
+            /*if (animalCutoffAgeSetting.Value < 0)
             {
                 animalCutoffAgeSetting.Value = 0;
-            }
+            }*/
             animalCutoffAge = animalCutoffAgeSetting.Value;
 
 

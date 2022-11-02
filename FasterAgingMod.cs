@@ -43,12 +43,12 @@ namespace FasterAging
         public static int pawnAgingMult = 1; //Multiplier to human pawn aging speed (before the age cutoff if that system is enabled)
         public static int pawnAgingMultAfterCutoff = 1; //Multiplier to human pawn aging speed after the age cutoff
         public static int pawnCutoffAge = 18; //Human aging rate age cutoff
-        public static long pawnCutoffAgeTicks => ((long)pawnCutoffAge * 3600000l) + 1000l; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
+        public static long pawnCutoffAgeTicks => ((long)pawnCutoffAge * 3600000L) + 1000L; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static int animalAgingMult = 1; //Multiplier to animal pawn aging speed (before the age cutoff if that system is enabled)
         public static int animalAgingMultAfterCutoff = 1; //Multiplier to animal pawn aging speed after the age cutoff
         public static int animalCutoffAge = 18; //Animal aging rate age cutoff
-        public static long animalCutoffAgeTicks => ((long)animalCutoffAge * 3600000l) + 1000l; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
+        public static long animalCutoffAgeTicks => ((long)animalCutoffAge * 3600000L) + 1000L; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static bool enableAgeCutoffs = false; //Whether the age cutoffs system is enabled
 

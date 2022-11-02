@@ -36,6 +36,8 @@ namespace FasterAging
 
         private SettingHandle<int> biosculptAgeReversalYearsSetting;
 
+        private SettingHandle<int> growthVatAgeTicksPerTickSetting;
+
 
         //Vars pulled from the HugsLib Settings
         public static int pawnAgingMult = 1; //Multiplier to human pawn aging speed (before the age cutoff if that system is enabled)
@@ -54,6 +56,9 @@ namespace FasterAging
 
 
         public static int biosculptAgeReversalYears = 1; //Number of years that are taken off a pawn's age at the completion of an age-reversal biosculpting process
+
+
+        public static int growthVatAgeTicksPerTick = 20; //Numer of biological age ticks gained per tick in a growth vat
 
 
         //Misc
@@ -110,6 +115,11 @@ namespace FasterAging
             biosculptAgeReversalYearsSetting = Settings.GetHandle<int>(settingName: "fa_biosculptAgeReversalYears", title: "fa_settings_biosculptAgeReversalYears_title".Translate(), description: "fa_settings_biosculptAgeReversalYears_description".Translate(), defaultValue: 1, Validators.IntRangeValidator(1, 100));
             biosculptAgeReversalYearsSetting.VisibilityPredicate = delegate () { return ModsConfig.IdeologyActive; }; //Only show when the user has Ideology
             biosculptAgeReversalYears = biosculptAgeReversalYearsSetting.Value;
+
+
+            growthVatAgeTicksPerTickSetting = Settings.GetHandle<int>(settingName: "fa_growthVatAgeTicksPerTick", title: "fa_settings_growthVatAgeTicksPerTick_title".Translate(), description: "fa_settings_growthVatAgeTicksPerTick_description".Translate(), defaultValue: 20, Validators.IntRangeValidator(1, 99999));
+            growthVatAgeTicksPerTickSetting.VisibilityPredicate = delegate () { return ModsConfig.BiotechActive; }; //Only show when the user has Biotech
+            growthVatAgeTicksPerTick = growthVatAgeTicksPerTickSetting.Value;
         }
 
         /// <summary>
@@ -153,6 +163,7 @@ namespace FasterAging
             biosculptAgeReversalYears = biosculptAgeReversalYearsSetting.Value;
 
 
+            growthVatAgeTicksPerTick = growthVatAgeTicksPerTickSetting.Value;
         }
 
         /// <summary>

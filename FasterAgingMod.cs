@@ -189,13 +189,13 @@ namespace FasterAging
                 if (enableAgeCutoffs && pawn.ageTracker.AgeBiologicalTicks >= animalCutoffAgeTicks)
                 {
                     //It's after the cutoff age and that system is enabled
-                    Log.Message("Animal pawn after cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + animalCutoffAgeTicks);
+                    //Log.Message("Animal pawn after cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + animalCutoffAgeTicks);
                     return animalAgingMultAfterCutoff;
                 }
                 else
                 {
                     //It's before the cutoff age or the cutoff system is disabled
-                    Log.Message("Animal pawn before cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + animalCutoffAgeTicks);
+                    //Log.Message("Animal pawn before cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + animalCutoffAgeTicks);
                     return animalAgingMult;
                 }
             }
@@ -205,13 +205,13 @@ namespace FasterAging
                 if (enableAgeCutoffs && pawn.ageTracker.AgeBiologicalTicks >= pawnCutoffAgeTicks)
                 {
                     //It's after the cutoff age and that system is enabled
-                    Log.Message("Human pawn after cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + pawnCutoffAgeTicks);
+                    //Log.Message("Human pawn after cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + pawnCutoffAgeTicks);
                     return pawnAgingMultAfterCutoff;
                 }
                 else
                 {
                     //It's before the cutoff age or the cutoff system is disabled
-                    Log.Message("Human pawn before cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + pawnCutoffAgeTicks);
+                    //Log.Message("Human pawn before cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + pawnCutoffAgeTicks);
                     return pawnAgingMult; //This is intentionally the default case - if I add more conditions I should move this to the last else
                 }
             }

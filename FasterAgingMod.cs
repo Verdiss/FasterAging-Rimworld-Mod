@@ -42,12 +42,12 @@ namespace FasterAging
         //Vars pulled from the HugsLib Settings
         public static int pawnAgingMult = 1; //Multiplier to human pawn aging speed (before the age cutoff if that system is enabled)
         public static int pawnAgingMultAfterCutoff = 1; //Multiplier to human pawn aging speed after the age cutoff
-        public static int pawnCutoffAge = 1000; //Human aging rate age cutoff
+        public static int pawnCutoffAge = 18; //Human aging rate age cutoff
         public static long pawnCutoffAgeTicks => ((long)pawnCutoffAge * 3600000l) + 1000l; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static int animalAgingMult = 1; //Multiplier to animal pawn aging speed (before the age cutoff if that system is enabled)
         public static int animalAgingMultAfterCutoff = 1; //Multiplier to animal pawn aging speed after the age cutoff
-        public static int animalCutoffAge = 1000; //Animal aging rate age cutoff
+        public static int animalCutoffAge = 18; //Animal aging rate age cutoff
         public static long animalCutoffAgeTicks => ((long)animalCutoffAge * 3600000l) + 1000l; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static bool enableAgeCutoffs = false; //Whether the age cutoffs system is enabled
@@ -81,7 +81,7 @@ namespace FasterAging
             pawnAgingMultAfterCutoffSetting.VisibilityPredicate = delegate () { return enableAgeCutoffsSetting.Value; }; //Hide if the system is disabled
             pawnAgingMultAfterCutoff = pawnAgingMultAfterCutoffSetting.Value;
 
-            pawnCutoffAgeSetting = Settings.GetHandle<int>(settingName: "fa_pawnCutoffAge", title: "fa_settings_pawnCutoffAge_title".Translate(), description: "fa_settings_pawnCutoffAge_description".Translate(), defaultValue: 1000, Validators.IntRangeValidator(0, 99999));
+            pawnCutoffAgeSetting = Settings.GetHandle<int>(settingName: "fa_pawnCutoffAge", title: "fa_settings_pawnCutoffAge_title".Translate(), description: "fa_settings_pawnCutoffAge_description".Translate(), defaultValue: 18, Validators.IntRangeValidator(0, 99999));
             pawnCutoffAgeSetting.VisibilityPredicate = delegate () { return enableAgeCutoffsSetting.Value; }; //Hide if the system is disabled
             pawnCutoffAge = pawnCutoffAgeSetting.Value;
 
@@ -94,7 +94,7 @@ namespace FasterAging
             animalAgingMultAfterCutoffSetting.VisibilityPredicate = delegate () { return enableAgeCutoffsSetting.Value; }; //Hide if the system is disabled
             animalAgingMultAfterCutoff = animalAgingMultAfterCutoffSetting.Value;
 
-            animalCutoffAgeSetting = Settings.GetHandle<int>(settingName: "fa_animalCutoffAge", title: "fa_settings_animalCutoffAge_title".Translate(), description: "fa_settings_animalCutoffAge_description".Translate(), defaultValue: 1000, Validators.IntRangeValidator(0, 99999));
+            animalCutoffAgeSetting = Settings.GetHandle<int>(settingName: "fa_animalCutoffAge", title: "fa_settings_animalCutoffAge_title".Translate(), description: "fa_settings_animalCutoffAge_description".Translate(), defaultValue: 18, Validators.IntRangeValidator(0, 99999));
             animalCutoffAgeSetting.VisibilityPredicate = delegate () { return enableAgeCutoffsSetting.Value; }; //Hide if the system is disabled
             animalCutoffAge = animalCutoffAgeSetting.Value;
 

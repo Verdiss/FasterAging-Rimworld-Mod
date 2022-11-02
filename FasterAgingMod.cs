@@ -89,7 +89,7 @@ namespace FasterAging
             animalAgingMultAfterCutoff = Settings.GetHandle<int>(settingName: "fa_animalAgingMultAfter", title: "fa_settings_animalAgingMultAfter_title".Translate(), description: "fa_settings_animalAgingMultAfter_description".Translate(), defaultValue: 1, Validators.IntRangeValidator(0, 99999));
             animalAgingMultAfterCutoff.VisibilityPredicate = delegate () { return enableAgeCutoffs.Value; }; //Hide if the system is disabled
             
-            animalCutoffAge = Settings.GetHandle<int>(settingName: "fa_animalCutoffAge", title: "fa_settings_animalCutoffAge_title".Translate(), description: "fa_settings_animalCutoffAge_description".Translate(), defaultValue: 18, Validators.IntRangeValidator(0, 99999));
+            animalCutoffAge = Settings.GetHandle<int>(settingName: "fa_animalCutoffAge", title: "fa_settings_animalCutoffAge_title".Translate(), description: "fa_settings_animalCutoffAge_description".Translate(), defaultValue: 5, Validators.IntRangeValidator(0, 99999));
             animalCutoffAge.VisibilityPredicate = delegate () { return enableAgeCutoffs.Value; }; //Hide if the system is disabled
             
 

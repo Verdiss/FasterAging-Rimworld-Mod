@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<HugsLib.UpdateFeatureDef Abstract="true" Name="FAUpdateFeatureBase">
+		<modNameReadable>Faster Aging</modNameReadable>
+		<modIdentifier>FasterAging</modIdentifier>
+		</HugsLib.UpdateFeatureDef>
+	
+	<HugsLib.UpdateFeatureDef ParentName="FAUpdateFeatureBase">
+		<defName>FasterAging_1_5_0</defName>
+		<assemblyVersion>1.5.0</assemblyVersion>
+		<content>Faster Aging has recieved an update, and all settings have been reset. You need to adjust the mod setting back to your preferences for the mod to work.</content>
+	</HugsLib.UpdateFeatureDef>
+</Defs>

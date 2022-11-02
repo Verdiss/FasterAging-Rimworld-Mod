@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+	<settings_pawnSpeedMultBefore_title>Humanlike Before Threshold Age Rate Multiplier</settings_pawnSpeedMultBefore_title>
+	<settings_pawnSpeedMultBefore_description>Aging speed multiplier for humanlike pawns younger than the humanlike age threshold. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</settings_pawnSpeedMultBefore_description>
+	
+	<settings_pawnSpeedMultAfter_title>Humanlike After Threshold Age Rate Multiplier</settings_pawnSpeedMultAfter_title>
+	<settings_pawnSpeedMultAfter_description>Aging speed multiplier for humanlike pawns as old or older than the humanlike age threshold. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</settings_pawnSpeedMultAfter_description>
+	
+	<settings_pawnCutoffAge_title>Humanlike Threshold Age (Years)</settings_pawnCutoffAge_title>
+	<settings_pawnCutoffAge_description>Humanlike pawns younger than this threshold will age at the human before threshold rate. When as old or older than this threshold age, they will age at the human after threshold age rate.</settings_pawnCutoffAge_description>
+	
+	
+	<settings_animalSpeedMultBefore_title>Animal Before Threshold Age Rate Multiplier</settings_animalSpeedMultBefore_title>
+	<settings_animalSpeedMultBefore_description>Aging speed multiplier for animal pawns younger than the animal age threshold. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</settings_animalSpeedMultBefore_description>
+	
+	<settings_animalSpeedMultAfter_title>Animal After Threshold Age Rate Multiplier</settings_animalSpeedMultAfter_title>
+	<settings_animalSpeedMultAfter_description>Aging speed multiplier for animal pawns as old or older than the animal age threshold. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</settings_animalSpeedMultAfter_description>
+	
+	<settings_animalCutoffAge_title>Animal Threshold Age (Years)</settings_animalCutoffAge_title>
+	<settings_animalCutoffAge_description>Animals younger than this threshold will age at the animal before threshold rate. When as old or older than this threshold age, they will age at the animal after threshold age rate.</settings_animalCutoffAge_description>
+	
+	
+	<settings_modifyChronologicalAge_title>Experimental: Enable Chronological Age Modification</settings_modifyChronologicalAge_title>
+	<settings_modifyChronologicalAge_description>Sets whether this mod will also accelerate/halt chronological age. WARNING: This is a risky edit, and may cause major problems and mod conflicts! Only use this if you need it!</settings_modifyChronologicalAge_description>
+	
+	
+	<settings_useAlternateAgingAlgorithm_title>Experimental: Enable Alternative Aging Algorithm</settings_useAlternateAgingAlgorithm_title>
+	<settings_useAlternateAgingAlgorithm_description>Enabling this will switch the mod to an alternate, improved performance aging algorithm. WARNING: It may cause different and likely more severe bugs/conflicts than the default algorithm. Use this if you have major performance issues while running this mod, or if the default algorithm is causing issues that the alternate one avoids.</settings_useAlternateAgingAlgorithm_description>
+</LanguageData>

@@ -64,10 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FasterAgingBiosculptReversalPatch.cs" />
+    <Compile Include="FasterAgingBioTicksPerTickPatch.cs" />
+    <Compile Include="FasterAgingGrowthVatAgingPatch.cs" />
     <Compile Include="FasterAgingMod.cs" />
-    <Compile Include="FasterAgingLifestagePatch.cs" />
-    <Compile Include="FasterAgingMothballedPatch.cs" />
-    <Compile Include="FasterAgingTickPatch.cs" />
     <Compile Include="FasterAgingPerPawnGizmoPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

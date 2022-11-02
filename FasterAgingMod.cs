@@ -31,10 +31,6 @@ namespace FasterAging
 
         private SettingHandle<bool> enableAgeCutoffsSetting;
 
-        private SettingHandle<bool> modifyChronologicalAgeSetting;
-
-        private SettingHandle<bool> useCompatiblityAlgorithmSetting;
-
         //private SettingHandle<bool> enablePerPawnRateSetting; //Disabled due to not working
 
 
@@ -53,10 +49,6 @@ namespace FasterAging
         public static long animalCutoffAgeTicks => (animalCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static bool enableAgeCutoffs = false; //Whether the age cutoffs system is enabled
-
-        public static bool modifyChronologicalAge = false; //Whether to also change chronological age, not just biological.
-
-        public static bool useCompatiblityAlgorithm = false; //Whether the mod uses a (technically inferior) but differently compatible aging algorithm.
 
         public static bool enablePerPawnRate = false; //Whether the per-pawn rate system is enabled and its control button shown.
 
@@ -107,13 +99,6 @@ namespace FasterAging
             enableAgeCutoffs = enableAgeCutoffsSetting.Value;
 
 
-            modifyChronologicalAgeSetting = Settings.GetHandle<bool>(settingName: "fa_modifyChronologicalAge", title: "fa_settings_modifyChronologicalAge_title".Translate(), description: "fa_settings_modifyChronologicalAge_description".Translate(), defaultValue: false);
-            modifyChronologicalAge = modifyChronologicalAgeSetting.Value;
-
-
-            useCompatiblityAlgorithmSetting = Settings.GetHandle<bool>(settingName: "fa_useCompatiblityAlgorithm", title: "fa_settings_useCompatiblityAlgorithm_title".Translate(), description: "fa_settings_useCompatiblityAlgorithm_description".Translate(), defaultValue: false);
-            useCompatiblityAlgorithm = useCompatiblityAlgorithmSetting.Value;
-
 
             //Disabled due to not working
             //enablePerPawnRateSetting = Settings.GetHandle<bool>(settingName: "enablePerPawnRate", title: "fa_settings_enablePerPawnRate_title".Translate(), description: "fa_settings_enablePerPawnRate_description".Translate(), defaultValue: false);
@@ -159,10 +144,6 @@ namespace FasterAging
             animalCutoffAge = animalCutoffAgeSetting.Value;
 
             enableAgeCutoffs = enableAgeCutoffsSetting.Value;
-
-            modifyChronologicalAge = modifyChronologicalAgeSetting.Value;
-
-            useCompatiblityAlgorithm = useCompatiblityAlgorithmSetting.Value;
 
             //Disabled due to not working
             //enablePerPawnRate = enablePerPawnRateSetting.Value;

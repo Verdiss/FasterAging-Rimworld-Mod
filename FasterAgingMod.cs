@@ -43,12 +43,12 @@ namespace FasterAging
         public static int pawnAgingMult = 1; //Multiplier to human pawn aging speed (before the age cutoff if that system is enabled)
         public static int pawnAgingMultAfterCutoff = 1; //Multiplier to human pawn aging speed after the age cutoff
         public static int pawnCutoffAge = 1000; //Human aging rate age cutoff
-        public static long pawnCutoffAgeTicks => (pawnCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
+        public static long pawnCutoffAgeTicks => ((long)pawnCutoffAge * 3600000l) + 1000l; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static int animalAgingMult = 1; //Multiplier to animal pawn aging speed (before the age cutoff if that system is enabled)
         public static int animalAgingMultAfterCutoff = 1; //Multiplier to animal pawn aging speed after the age cutoff
         public static int animalCutoffAge = 1000; //Animal aging rate age cutoff
-        public static long animalCutoffAgeTicks => (animalCutoffAge * 3600000) + 1000; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
+        public static long animalCutoffAgeTicks => ((long)animalCutoffAge * 3600000l) + 1000l; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
         public static bool enableAgeCutoffs = false; //Whether the age cutoffs system is enabled
 
@@ -189,11 +189,13 @@ namespace FasterAging
                 if (enableAgeCutoffs && pawn.ageTracker.AgeBiologicalTicks >= animalCutoffAgeTicks)
                 {
                     //It's after the cutoff age and that system is enabled
+                    Log.Message("Animal pawn after cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + animalCutoffAgeTicks);
                     return animalAgingMultAfterCutoff;
                 }
                 else
                 {
                     //It's before the cutoff age or the cutoff system is disabled
+                    Log.Message("Animal pawn before cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + animalCutoffAgeTicks);
                     return animalAgingMult;
                 }
             }
@@ -203,11 +205,13 @@ namespace FasterAging
                 if (enableAgeCutoffs && pawn.ageTracker.AgeBiologicalTicks >= pawnCutoffAgeTicks)
                 {
                     //It's after the cutoff age and that system is enabled
+                    Log.Message("Human pawn after cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + pawnCutoffAgeTicks);
                     return pawnAgingMultAfterCutoff;
                 }
                 else
                 {
                     //It's before the cutoff age or the cutoff system is disabled
+                    Log.Message("Human pawn before cutoff, name: " + pawn.Name + ", age ticks: " + pawn.ageTracker.AgeBiologicalTicks + ", cutoff ticks: " + pawnCutoffAgeTicks);
                     return pawnAgingMult; //This is intentionally the default case - if I add more conditions I should move this to the last else
                 }
             }

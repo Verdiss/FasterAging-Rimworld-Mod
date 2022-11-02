@@ -18,7 +18,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>ModFiles\GameVersion\Assemblies\</OutputPath>
+    <OutputPath>ModFiles\1.4\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,11 +75,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ModFiles\GameVersion\Assemblies\" />
+    <Folder Include="ModFiles\1.4\Assemblies\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModFiles\GameVersion\Languages\English\Keyed\FasterAging.xml" />
-    <Content Include="ModFiles\GameVersion\Textures\UI\Commands\FAPerPawnGizmo.png" />
+    <Content Include="ModFiles\1.4\Languages\English\Keyed\FasterAging.xml" />
+    <Content Include="ModFiles\1.4\Textures\UI\Commands\FAPerPawnGizmo.png" />
     <Content Include="ModFiles\About\About.xml" />
     <Content Include="ModFiles\About\Preview.png" />
     <Content Include="ModFiles\About\PublishedFileId.txt" />

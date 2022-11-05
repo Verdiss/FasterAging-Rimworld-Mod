@@ -69,6 +69,7 @@
     <Compile Include="FasterAgingGrowthVatAgingPatch.cs" />
     <Compile Include="FasterAgingMod.cs" />
     <Compile Include="FasterAgingPerPawnGizmoPatch.cs" />
+    <Compile Include="GrowthPointsPerDayPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

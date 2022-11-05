@@ -1,6 +1,6 @@
 ﻿/*
  * Faster Aging Mod by Verdiss
- * Mod Version 2.0.0, last updated 2022-11-02, tested for Rimworld 1.4
+ * Mod Version 2.0.1, last updated 2022-11-05, tested for Rimworld 1.4
  * You are free to redistribute this mod and use its code for non-commercial purposes, just give credit to Verdiss in descriptions and in source code.
  */
 

@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="FasterAgingBiosculptReversalPatch.cs" />
     <Compile Include="FasterAgingBioTicksPerTickPatch.cs" />
+    <Compile Include="FasterAgingCalculateGrowthPatch.cs" />
     <Compile Include="FasterAgingGrowthVatAgingPatch.cs" />
     <Compile Include="FasterAgingMod.cs" />
     <Compile Include="FasterAgingPerPawnGizmoPatch.cs" />

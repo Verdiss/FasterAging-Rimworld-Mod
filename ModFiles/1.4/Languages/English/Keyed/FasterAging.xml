@@ -2,42 +2,60 @@
 <LanguageData>
 	<fa_settings_pawnAgingMult_title>Humanoid Aging Rate Multiplier</fa_settings_pawnAgingMult_title>
 	<fa_settings_pawnAgingMult_description>Aging speed multiplier for humanoid pawns. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</fa_settings_pawnAgingMult_description>
-	
+
 	<fa_settings_pawnAgingMultAfter_title>Humanoid After Threshold Age Rate Multiplier</fa_settings_pawnAgingMultAfter_title>
 	<fa_settings_pawnAgingMultAfter_description>Aging speed multiplier for humanoid pawns as old or older than the humanoid age threshold. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</fa_settings_pawnAgingMultAfter_description>
-	
+
 	<fa_settings_pawnCutoffAge_title>Humanoid Threshold Age (Years)</fa_settings_pawnCutoffAge_title>
 	<fa_settings_pawnCutoffAge_description>Humanoid pawns younger than this threshold will age at the standard human rate. When as old or older than this threshold age, they will age at the human after threshold age rate.</fa_settings_pawnCutoffAge_description>
-	
-	
+
+
 	<fa_settings_animalAgingMult_title>Animal Aging Rate Multiplier</fa_settings_animalAgingMult_title>
 	<fa_settings_animalAgingMult_description>Aging speed multiplier for animal pawns. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</fa_settings_animalAgingMult_description>
-	
+
 	<fa_settings_animalAgingMultAfter_title>Animal After Threshold Age Rate Multiplier</fa_settings_animalAgingMultAfter_title>
 	<fa_settings_animalAgingMultAfter_description>Aging speed multiplier for animal pawns as old or older than the animal age threshold. (1 = vanilla, 0 = no aging, 10 = age at 10 times vanilla rate)</fa_settings_animalAgingMultAfter_description>
-	
+
 	<fa_settings_animalCutoffAge_title>Animal Threshold Age (Years)</fa_settings_animalCutoffAge_title>
 	<fa_settings_animalCutoffAge_description>Animal pawns younger than this threshold will age at the standard animal rate. When as old or older than this threshold age, they will age at the animal after threshold age rate.</fa_settings_animalCutoffAge_description>
-	
-	
+
+
 	<fa_settings_enableAgeCutoffs_title>Enable Age Threshold System</fa_settings_enableAgeCutoffs_title>
 	<fa_settings_enableAgeCutoffs_description>Enables the ability to define two different aging rates for pawns above and below a certain age threshold. Useful if you want pawns to age up quickly to some point, then age slowly after that. Previously set threshold settings are ignored if this is disabled.</fa_settings_enableAgeCutoffs_description>
-	
-	
-	
+
+	<fa_settings_modifyChildGrowthPoints_title>Modify Child Growth Point Gain</fa_settings_modifyChildGrowthPoints_title>
+	<fa_settings_modifyChildGrowthPoints_description>Whether to use custom multipliers for child growth point gain. Note that growth gain always scales to aging rate, regardless of this setting -- these values stack with that scaling.</fa_settings_modifyChildGrowthPoints_description>
+
+	<fa_settings_childGrowthRate3to7_title>Growth Point Multiplier (Age 3 to 7)</fa_settings_childGrowthRate3to7_title>
+	<fa_settings_childGrowthRate3to7_description>Multiplier for growth point gain rate for children below the age of 7.</fa_settings_childGrowthRate3to7_description>
+
+	<fa_settings_childGrowthRate7to10_title>Growth Point Multiplier (Age 7 to 10)</fa_settings_childGrowthRate7to10_title>
+	<fa_settings_childGrowthRate7to10_description>Multiplier for growth point gain rate for children between the ages of 7 and 10.</fa_settings_childGrowthRate7to10_description>
+
+	<fa_settings_childGrowthRate10to13_title>Growth Point Multiplier (Age 10 to 13)</fa_settings_childGrowthRate10to13_title>
+	<fa_settings_childGrowthRate10to13_description>Multiplier for growth point gain rate for children above the age of 10.</fa_settings_childGrowthRate10to13_description>
+
+
 	<fa_settings_enablePerPawnRate_title>[Experimental] Enable Per-Pawn Control</fa_settings_enablePerPawnRate_title>
 	<fa_settings_enablePerPawnRate_description>Activates a button on the pawn control bar to set an aging rate on a per-pawn basis. Pawns that do not have a custam rate set will default to the global settings based on type and age. Disabling reverts all pawns to the global settings.</fa_settings_enablePerPawnRate_description>
-	
+
 	<fa_perPawnRateGizmoLabel>Custom Aging Speed</fa_perPawnRateGizmoLabel>
 	<fa_perPawnRateGizmoDesc>Set/unset a custom aging rate for only this pawn. Overrides the global settings.</fa_perPawnRateGizmoDesc>
-	
+
 	<fa_perPawnDialogText>Custom aging rate. Set to -1 for global settings.\nCurrently {0} times Vanilla</fa_perPawnDialogText>
 	<fa_perPawnDialogText_global>Custom aging rate. Set to -1 for global settings.\nCurrently using global settings</fa_perPawnDialogText_global>
-	
-	
+
+
 	<fa_settings_biosculptAgeReversalYears_title>[Ideology] Biosculpting Pod Age Reversal Amount (Years)</fa_settings_biosculptAgeReversalYears_title>
 	<fa_settings_biosculptAgeReversalYears_description>Number of years of age reversal done on a pawn upon completing a biosculpting de-aging operation. (1 = vanilla 1 year per operation, 10 = 10 years per operation)</fa_settings_biosculptAgeReversalYears_description>
 
 	<fa_settings_growthVatAgeTicksPerTick_title>[Biotech] Growth Vat Aging Rate</fa_settings_growthVatAgeTicksPerTick_title>
 	<fa_settings_growthVatAgeTicksPerTick_description>Number of biological age ticks to gain per tick spent in a growth vat. Grwoth vat aging overrides/does not interact with other settings or aging rate modifiers.</fa_settings_growthVatAgeTicksPerTick_description>
+
+
+
+
+
+
+
 </LanguageData>

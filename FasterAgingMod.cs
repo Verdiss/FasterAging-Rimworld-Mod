@@ -21,48 +21,30 @@ namespace FasterAging
         public override string ModIdentifier => "FasterAging";
 
         //HugsLib Settings
-        public static SettingHandle<int> pawnAgingMult;
-        public static SettingHandle<int> pawnAgingMultAfterCutoff;
-        public static SettingHandle<int> pawnCutoffAge;
-
-        public static SettingHandle<int> animalAgingMult;
-        public static SettingHandle<int> animalAgingMultAfterCutoff;
-        public static SettingHandle<int> animalCutoffAge;
-
-        public static SettingHandle<bool> enableAgeCutoffs;
-
-        //private SettingHandle<bool> enablePerPawnRateSetting; //Disabled due to not working
-
-
-        public static SettingHandle<int> biosculptAgeReversalYears;
-
-        public static SettingHandle<int> growthVatAgeTicksPerTick;
-
-
-        //Vars pulled from the HugsLib Settings
-        //public static int pawnAgingMult = 1; //Multiplier to human pawn aging speed (before the age cutoff if that system is enabled)
-        //public static int pawnAgingMultAfterCutoff = 1; //Multiplier to human pawn aging speed after the age cutoff
-        //public static int pawnCutoffAge = 18; //Human aging rate age cutoff
+        public static SettingHandle<int> pawnAgingMult; //Multiplier to human pawn aging speed (before the age cutoff if that system is enabled)
+        public static SettingHandle<int> pawnAgingMultAfterCutoff; //Multiplier to human pawn aging speed after the age cutoff
+        public static SettingHandle<int> pawnCutoffAge; //Human aging rate age cutoff
         public static long pawnCutoffAgeTicks => ((long)pawnCutoffAge * 3600000L) + 1000L; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
-        //public static int animalAgingMult = 1; //Multiplier to animal pawn aging speed (before the age cutoff if that system is enabled)
-        //public static int animalAgingMultAfterCutoff = 1; //Multiplier to animal pawn aging speed after the age cutoff
-        //public static int animalCutoffAge = 18; //Animal aging rate age cutoff
+        public static SettingHandle<int> animalAgingMult; //Multiplier to animal pawn aging speed (before the age cutoff if that system is enabled)
+        public static SettingHandle<int> animalAgingMultAfterCutoff; //Multiplier to animal pawn aging speed after the age cutoff
+        public static SettingHandle<int> animalCutoffAge; //Animal aging rate age cutoff
         public static long animalCutoffAgeTicks => ((long)animalCutoffAge * 3600000L) + 1000L; //Cutoff age converted to ticks. 1000 ticks are added to this value as a buffer around birthdays to prevent repeatedly calling birthday code when aging is disabled.
 
-        //public static bool enableAgeCutoffs = false; //Whether the age cutoffs system is enabled
+        public static SettingHandle<bool> enableAgeCutoffs; //Whether the age cutoffs system is enabled
 
-        //public static bool enablePerPawnRate = false; //Whether the per-pawn rate system is enabled and its control button shown.
-
-
-        //public static int biosculptAgeReversalYears = 1; //Number of years that are taken off a pawn's age at the completion of an age-reversal biosculpting process
+        //private SettingHandle<bool> enablePerPawnRateSetting; //Whether the per-pawn rate system is enabled and its control button shown. Disabled due to not working
+        //public static Dictionary<string, int> perPawnRates; //Stores any per-pawn custom selected aging rates. Key is pawn's LoadID, accessed via pawn.GetUniqueLoadID(). Value is aging multiplier for that pawn.
 
 
-        //public static int growthVatAgeTicksPerTick = 20; //Numer of biological age ticks gained per tick in a growth vat
+        public static SettingHandle<int> biosculptAgeReversalYears; //Number of years that are taken off a pawn's age at the completion of an age-reversal biosculpting process
+
+        public static SettingHandle<int> growthVatAgeTicksPerTick; //Numer of biological age ticks gained per tick in a growth vat
 
 
-        //Misc
-        public static Dictionary<string, int> perPawnRates; //Stores any per-pawn custom selected aging rates. Key is pawn's LoadID, accessed via pawn.GetUniqueLoadID(). Value is aging multiplier for that pawn.
+
+        
+        
         
 
 
@@ -111,21 +93,24 @@ namespace FasterAging
 
             growthVatAgeTicksPerTick = Settings.GetHandle<int>(settingName: "fa_growthVatAgeTicksPerTick", title: "fa_settings_growthVatAgeTicksPerTick_title".Translate(), description: "fa_settings_growthVatAgeTicksPerTick_description".Translate(), defaultValue: 20, Validators.IntRangeValidator(1, 99999));
             growthVatAgeTicksPerTick.VisibilityPredicate = delegate () { return ModsConfig.BiotechActive; }; //Only show when the user has Biotech
+
+
+
         }
 
         /// <summary>
         /// HugsLib runs this when a game world is finished loading, i.e. after loading a save or starting a new game
         /// Handles loading game save data
         /// </summary>
-        public override void WorldLoaded()
-        {
-            //Set the per-pawn rates store to be saved/loaded
-            Scribe_Collections.Look(ref perPawnRates, "perPawnRatesFA", LookMode.Value, LookMode.Value);
-            if (perPawnRates == null)
-            {
-                perPawnRates = new Dictionary<string, int>(); //Initialize if the dic wasn't loaded
-            }
-        }
+        //public override void WorldLoaded()
+        //{
+        //    //Set the per-pawn rates store to be saved/loaded
+        //    Scribe_Collections.Look(ref perPawnRates, "perPawnRatesFA", LookMode.Value, LookMode.Value);
+        //    if (perPawnRates == null)
+        //    {
+        //        perPawnRates = new Dictionary<string, int>(); //Initialize if the dic wasn't loaded
+        //    }
+        //}
 
         /// <summary>
         /// Gets the aging rate multiplier value for the input pawn, based on the mod's settings, and the pawn's type and age, and whether the pawn has a per-pawn rate set

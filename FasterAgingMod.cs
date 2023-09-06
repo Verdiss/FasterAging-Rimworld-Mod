@@ -33,6 +33,13 @@ namespace FasterAging
 
         public static SettingHandle<bool> enableAgeCutoffs; //Whether the age cutoffs system is enabled
 
+
+        public static SettingHandle<bool> modifyChildGrowthPoints; //Whether to modify the vanilla child growth point gain rate (growth tiers control number of passions and traits on aging up)
+        public static SettingHandle<float> childGrowthRate3to7; //Growth points gain multiplier for children younger than 7
+        public static SettingHandle<float> childGrowthRate7to10; //Growth points gain multiplier for children age 7 to 10
+        public static SettingHandle<float> childGrowthRate10to13;//Growth points gain multiplier for children older than 10
+
+
         //private SettingHandle<bool> enablePerPawnRateSetting; //Whether the per-pawn rate system is enabled and its control button shown. Disabled due to not working
         //public static Dictionary<string, int> perPawnRates; //Stores any per-pawn custom selected aging rates. Key is pawn's LoadID, accessed via pawn.GetUniqueLoadID(). Value is aging multiplier for that pawn.
 
@@ -42,10 +49,6 @@ namespace FasterAging
         public static SettingHandle<int> growthVatAgeTicksPerTick; //Numer of biological age ticks gained per tick in a growth vat
 
 
-
-        
-        
-        
 
 
 
@@ -77,13 +80,27 @@ namespace FasterAging
 
 
             enableAgeCutoffs = Settings.GetHandle<bool>(settingName: "fa_enableAgeCutoffs", title: "fa_settings_enableAgeCutoffs_title".Translate(), description: "fa_settings_enableAgeCutoffs_description".Translate(), defaultValue: false);
-            
+
+
+
+            modifyChildGrowthPoints = Settings.GetHandle<bool>(settingName: "fa_settings_modifyChildGrowthPoints", title: "fa_settings_modifyChildGrowthPoints_title".Translate(), description: "fa_settings_modifyChildGrowthPoints_description".Translate(), defaultValue: false);
+
+            childGrowthRate3to7 = Settings.GetHandle<float>(settingName: "fa_settings_childGrowthRate3to7", title: "fa_settings_childGrowthRate3to7_title".Translate(), description: "fa_settings_childGrowthRate3to7_description".Translate(), defaultValue: 0.75f, Validators.FloatRangeValidator(0f, 100f));
+            childGrowthRate3to7.VisibilityPredicate = delegate () { return modifyChildGrowthPoints.Value; }; //Hide if the growth modification is disabled
+
+            childGrowthRate7to10 = Settings.GetHandle<float>(settingName: "fa_settings_childGrowthRate7to10", title: "fa_settings_childGrowthRate7to10_title".Translate(), description: "fa_settings_childGrowthRate7to10_description".Translate(), defaultValue: 1.0f, Validators.FloatRangeValidator(0f, 100f));
+            childGrowthRate7to10.VisibilityPredicate = delegate () { return modifyChildGrowthPoints.Value; }; //Hide if the growth modification is disabled
+
+            childGrowthRate10to13 = Settings.GetHandle<float>(settingName: "fa_settings_childGrowthRate10to13", title: "fa_settings_childGrowthRate10to13_title".Translate(), description: "fa_settings_childGrowthRate10to13_description".Translate(), defaultValue: 1.0f, Validators.FloatRangeValidator(0f, 100f));
+            childGrowthRate10to13.VisibilityPredicate = delegate () { return modifyChildGrowthPoints.Value; }; //Hide if the growth modification is disabled
+
+
 
 
             //Disabled due to not working
             //enablePerPawnRateSetting = Settings.GetHandle<bool>(settingName: "enablePerPawnRate", title: "fa_settings_enablePerPawnRate_title".Translate(), description: "fa_settings_enablePerPawnRate_description".Translate(), defaultValue: false);
             //enablePerPawnRate = enablePerPawnRateSetting.Value;
-            
+
 
 
 

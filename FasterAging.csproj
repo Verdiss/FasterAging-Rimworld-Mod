@@ -18,7 +18,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>ModFiles\1.4\Assemblies\</OutputPath>
+    <OutputPath>ModFiles\1.5\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -78,15 +78,14 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ModFiles\1.4\Assemblies\" />
+    <Folder Include="ModFiles\1.5\Assemblies\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModFiles\1.4\Languages\English\Keyed\FasterAging.xml" />
-    <Content Include="ModFiles\1.4\Textures\UI\Commands\FAPerPawnGizmo.png" />
+    <Content Include="ModFiles\1.5\Languages\English\Keyed\FasterAging.xml" />
+    <Content Include="ModFiles\1.5\Textures\UI\Commands\FAPerPawnGizmo.png" />
     <Content Include="ModFiles\About\About.xml" />
     <Content Include="ModFiles\About\Preview.png" />
     <Content Include="ModFiles\About\PublishedFileId.txt" />
-    <Content Include="ModFiles\News\FAUpdateFeatures.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
